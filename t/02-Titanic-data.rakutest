@@ -1,0 +1,84 @@
+use v6.d;
+
+use lib './lib';
+use lib '.';
+
+use Data::TypeSystem;
+
+use Test;
+
+my @dsTitanicArr =
+        ($["1262", "3rd", "60", "female", "survived"],
+         $["1195", "3rd", "-1", "male", "died"],
+         $["158", "1st", "-1", "male", "died"],
+         $["824", "3rd", "30", "female", "survived"],
+         $["955", "3rd", "-1", "male", "died"],
+         $["1229", "3rd", "30", "male", "survived"],
+         $["1193", "3rd", "20", "male", "died"],
+         $["745", "3rd", "20", "male", "died"],
+         $["101", "1st", "50", "male", "survived"],
+         $["609", "3rd", "30", "male", "died"],
+         $["628", "3rd", "10", "female", "died"],
+         $["49", "1st", "50", "female", "survived"],
+         $["943", "3rd", "-1", "male", "died"],
+         $["535", "2nd", "20", "female", "survived"],
+         $["455", "2nd", "40", "male", "survived"],
+         $["950", "3rd", "30", "male", "survived"],
+         $["1307", "3rd", "30", "male", "died"],
+         $["1027", "3rd", "30", "female", "survived"],
+         $["1022", "3rd", "30", "male", "died"],
+         $["742", "3rd", "20", "male", "died"]);
+
+my @dsTitanic =
+        (${:id("835"), :passengerAge("30"), :passengerClass("3rd"), :passengerSex("male"), :passengerSurvival("died")},
+         ${:id("280"), :passengerAge("60"), :passengerClass("1st"), :passengerSex("male"), :passengerSurvival("died")},
+         ${:id("734"), :passengerAge("10"), :passengerClass("3rd"), :passengerSex("male"), :passengerSurvival("survived")},
+         ${:id("1029"), :passengerAge("-1"), :passengerClass("3rd"), :passengerSex("female"), :passengerSurvival("survived")},
+         ${:id("760"), :passengerAge("40"), :passengerClass("3rd"), :passengerSex("female"), :passengerSurvival("survived")},
+         ${:id("207"), :passengerAge("40"), :passengerClass("1st"), :passengerSex("male"), :passengerSurvival("died")},
+         ${:id("653"), :passengerAge("20"), :passengerClass("3rd"), :passengerSex("male"), :passengerSurvival("died")},
+         ${:id("301"), :passengerAge("60"), :passengerClass("1st"), :passengerSex("male"), :passengerSurvival("died")},
+         ${:id("1191"), :passengerAge("20"), :passengerClass("3rd"), :passengerSex("male"), :passengerSurvival("survived")},
+         ${:id("236"), :passengerAge("-1"), :passengerClass("1st"), :passengerSex("male"), :passengerSurvival("survived")},
+         ${:id("1256"), :passengerAge("-1"), :passengerClass("3rd"), :passengerSex("male"), :passengerSurvival("died")},
+         ${:id("444"), :passengerAge("30"), :passengerClass("2nd"), :passengerSex("male"), :passengerSurvival("died")},
+         ${:id("62"), :passengerAge("80"), :passengerClass("1st"), :passengerSex("female"), :passengerSurvival("survived")},
+         ${:id("221"), :passengerAge("20"), :passengerClass("1st"), :passengerSex("female"), :passengerSurvival("survived")},
+         ${:id("1057"), :passengerAge("10"), :passengerClass("3rd"), :passengerSex("male"), :passengerSurvival("survived")},
+         ${:id("668"), :passengerAge("30"), :passengerClass("3rd"), :passengerSex("female"), :passengerSurvival("died")},
+         ${:id("1068"), :passengerAge("20"), :passengerClass("3rd"), :passengerSex("female"), :passengerSurvival("survived")},
+         ${:id("1198"), :passengerAge("-1"), :passengerClass("3rd"), :passengerSex("male"), :passengerSurvival("died")},
+         ${:id("1261"), :passengerAge("20"), :passengerClass("3rd"), :passengerSex("female"), :passengerSurvival("survived")},
+         ${:id("937"), :passengerAge("30"), :passengerClass("3rd"), :passengerSex("female"), :passengerSurvival("survived")});
+
+
+@dsTitanic = @dsTitanic.map({
+    $_<passengerAge> = $_<passengerAge>.Numeric;
+    $_
+}).Array;
+
+
+plan *;
+
+# 1
+is deduce-type(@dsTitanic),
+        'Vector(Struct([id, passengerAge, passengerClass, passengerSex, passengerSurvival], [Str, Int, Str, Str, Str]), 20)';
+
+# 2
+is deduce-type(@dsTitanic[12]),
+        'Struct([id, passengerAge, passengerClass, passengerSex, passengerSurvival], [Str, Int, Str, Str, Str])';
+
+# 3
+is deduce-type(@dsTitanic[12].sort({ $_.key })>>.value.List),
+        'Tuple([Atom((Str)), Atom((Int)), Atom((Str)), Atom((Str)), Atom((Str))])';
+
+# 4
+is deduce-type(@dsTitanic[12]<passengerClass>),
+        'Atom((Str))';
+
+# 5
+is deduce-type(@dsTitanic.pick(3).map({ $_.sort({ $_.key }) })>>.Array),
+        "Vector(Tuple([Pair(Atom((Str)), Atom((Str))), Pair(Atom((Str)), Atom((Int))), Pair(Atom((Str)), Atom((Str))), Pair(Atom((Str)), Atom((Str))), Pair(Atom((Str)), Atom((Str)))]), 3)";
+
+
+done-testing;

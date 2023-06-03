@@ -1,0 +1,27 @@
+{
+  "name": "Data::TypeSystem",
+  "description": "Data type system for different data structures (arrays, lists of hashes, etc.)",
+  "version": "0.1.0",
+  "perl": "6.d",
+  "authors": [
+    "Anton Antonov"
+  ],
+  "auth": "zef:antononcube",
+  "depends": [],
+  "build-depends": [],
+  "test-depends": [],
+  "provides": {
+    "Data::TypeSystem": "lib/Data/TypeSystem.rakumod",
+    "Data::TypeSystem::Examiner": "lib/Data/TypeSystem/Examiner.rakumod",
+    "Data::TypeSystem::Predicates": "lib/Data/TypeSystem/Predicates.rakumod"
+  },
+  "resources": [],
+  "license": "Artistic-2.0",
+  "tags": [
+    "data structure",
+    "type system",
+    "types"
+  ],
+  "api": "1",
+  "source-url": "https://github.com/antononcube/Raku-Data-TypeSystem.git"
+}

@@ -42,21 +42,11 @@ my @dsTitanic = example-dataset($url, headers => 'auto');
 @dsTitanic = @dsTitanic.map({$_<passengerAge> = $_<passengerAge>.Numeric; $_}).Array;
 @dsTitanic.elems
 ```
-```
-# 1309
-```
 
 Here is a sample of dataset's records:
 
 ```perl6
 .say for @dsTitanic.pick(5)
-```
-```
-# {id => 1097, passengerAge => 0, passengerClass => 3rd, passengerSex => male, passengerSurvival => died}
-# {id => 1018, passengerAge => 20, passengerClass => 3rd, passengerSex => male, passengerSurvival => survived}
-# {id => 31, passengerAge => 40, passengerClass => 1st, passengerSex => male, passengerSurvival => died}
-# {id => 1030, passengerAge => -1, passengerClass => 3rd, passengerSex => male, passengerSurvival => died}
-# {id => 126, passengerAge => -1, passengerClass => 1st, passengerSex => male, passengerSurvival => died}
 ```
 
 Here is the type of a single record:
@@ -65,26 +55,17 @@ Here is the type of a single record:
 use Data::TypeSystem;
 deduce-type(@dsTitanic[12])
 ```
-```
-# Struct([id, passengerAge, passengerClass, passengerSex, passengerSurvival], [Int, Int, Str, Str, Str])
-```
 
 Here is the type of single record's values:
 
 ```perl6
 deduce-type(@dsTitanic[12].values.List)
 ```
-```
-# Tuple([Atom((Int)), Atom((Str)), Atom((Str)), Atom((Str)), Atom((Int))])
-```
 
 Here is the type of the whole dataset:
 
 ```perl6
 deduce-type(@dsTitanic)
-```
-```
-# Vector(Struct([id, passengerAge, passengerClass, passengerSex, passengerSurvival], [Int, Int, Str, Str, Str]), 1309)
 ```
 
 Here is the type of "values only" records:
@@ -93,9 +74,6 @@ Here is the type of "values only" records:
 my @valArr = @dsTitanic>>.values>>.Array;
 deduce-type(@valArr)
 ```
-```
-# Vector((Any), 1309)
-```
 
 Here is the type of the string values only records:
 
@@ -103,18 +81,9 @@ Here is the type of the string values only records:
 my @valArr = @dsTitanic.map({ $_.grep({ $_.value ~~ Str }).Hash })>>.values>>.Array;
 .say for @valArr.pick(4);
 ```
-```
-# [1st male died]
-# [3rd male died]
-# [male died 3rd]
-# [died 3rd male]
-```
 
 ```perl6
 deduce-type(@valArr);
-```
-```
-# Vector(Vector(Atom((Str)), 3), 1309)
 ```
 
 -------

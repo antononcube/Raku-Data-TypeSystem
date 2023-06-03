@@ -1,0 +1,81 @@
+use v6.d;
+
+use lib './lib';
+use lib '.';
+
+use Data::TypeSystem;
+
+use Test;
+
+my @dsRandNum =
+        [{ :A(5.295105534105463e0), :B(2.4765132431861057e0) },
+         { :A(5.504432770843629e0), :B(8.252672576017405e0) },
+         { :A(0.47585824504772667e0), :B(4.6263512559214215e0) },
+         { :A(3.5677811370087187e0), :B(6.861688593804621e0) },
+         { :A(8.069906679462077e0), :B(5.504368820762937e0) },
+         { :A(2.7870773247470213e0), :B(3.081614241542895e0) },
+         { :A(4.688921458531033e0), :B(8.881239727023592e0) }];
+
+my %hRand = :Aleppo("Zealander"), :Karaites(5.512476726477258e0),
+            :McGraw(4.141810176531181e0), :angioplasty("audit"),
+            :atheism("chow"), :brake("problematical"),
+            :cardiology(8.947919113468533e0), :commination(2.619295707156705e0),
+            :eschatological(7.442247882717225e0), :handwriting("Helios"),
+            :koudou(3.4686291412158865e0), :masturbate(8.026980830683481e0),
+            :politically(0.4971539286542881e0), :pyridoxamine("thriftiness"),
+            :retired("gripes"), :scrumpy("Paternoster"),
+            :sojourner("overrefinement"), :tortfeasor(1.726557224751012e0),
+            :usage(8.428214682624322e0), :xcviii("sandfly");
+
+
+my %dsRandNum = ('a' ... 'z')[^@dsRandNum.elems] Z=> @dsRandNum;
+
+plan *;
+
+# 1
+is deduce-type(@dsRandNum),
+        "Vector(Assoc(Atom((Str)), Atom((Numeric)), { @dsRandNum[0].elems }), { @dsRandNum.elems })";
+
+# 2
+is deduce-type(%dsRandNum),
+        "Assoc(Atom((Str)), Assoc(Atom((Str)), Atom((Numeric)), { @dsRandNum[0].elems }), { @dsRandNum.elems })";
+
+# 3
+is deduce-type(%hRand.pairs.List):!tally,
+        'Vector((Any), 20)';
+
+# 4
+is deduce-type(%hRand.pairs.List):tally,
+        'Tuple([Pair(Atom((Str)), Atom((Numeric))) => 10, Pair(Atom((Str)), Atom((Str))) => 10], 20)';
+
+# 5
+my @dsIRC10 = [{ :DateString("2020-12-23"),
+                 :DateTime(DateTime.new(2020, 12, 23, 14, 7, 0)), :Nick("Watson"),
+                 :TimeBucket("2020-12-23_14"), :Timestamp("2020-12-23Z14:07"),
+                 :Weekday(3) },
+               { :DateString("2019-10-29"),
+                 :DateTime(DateTime.new(2019, 10, 29, 15, 13, 0)), :Nick("Roxy"),
+                 :TimeBucket("2019-10-29_15"), :Timestamp("2019-10-29Z15:13-0001"),
+                 :Weekday(2) },
+               { :DateString("2020-08-06"),
+                 :DateTime(DateTime.new(2020, 8, 6, 18, 52, 0)), :Nick("Jimi"),
+                 :TimeBucket("2020-08-06_18"), :Timestamp("2020-08-06Z18:52-0002"),
+                 :Weekday(4) },
+               { :DateString("2021-11-18"),
+                 :DateTime(DateTime.new(2021, 11, 18, 2, 36, 0)), :Nick("Tucker"),
+                 :TimeBucket("2021-11-18_2"), :Timestamp("2021-11-18Z02:36"),
+                 :Weekday(4) }];
+
+is deduce-type(@dsIRC10),
+        'Vector(Struct([DateString, DateTime, Nick, TimeBucket, Timestamp, Weekday], [Str, DateTime, Str, Str, Str, Int]), 4)';
+
+# 6
+my @dsTable11 = [{ :Date(Date.new(2020, 12, 23)), :Nick("Watson"), :Weekday(3/7) },
+                 { :Date(Date.new(2019, 10, 29)), :Nick("Roxy"), :Weekday(2/3) },
+                 { :Date(Date.new(2020, 8, 6)), :Nick("Jimi"), :Weekday(4/5) },
+                 { :Date(Date.new(2021, 11, 18)), :Nick("Tucker"), :Weekday(4/9) }];
+
+is deduce-type(@dsTable11),
+        'Vector(Struct([Date, Nick, Weekday], [Date, Str, Rat]), 4)';
+
+done-testing;
