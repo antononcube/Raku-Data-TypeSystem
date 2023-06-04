@@ -194,8 +194,8 @@ class Data::TypeSystem::Examiner {
             }
 
             when is-hash-of-hashes($_) {
-                my $kType = self.deduce-type($_.keys[0]);
-                my $vType = self.deduce-type($_.values.List);
+                my $kType = self.deduce-type($_.keys[0], :$tally);
+                my $vType = self.deduce-type($_.values.List, :$tally);
 
                 if $vType ~~ Data::TypeSystem::Vector {
                     return Data::TypeSystem::Assoc.new( keyType => $kType, type => $vType.type, count => $_.elems)
