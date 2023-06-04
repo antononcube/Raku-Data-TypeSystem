@@ -1,7 +1,7 @@
 {
   "name": "Data::TypeSystem",
   "description": "Data type system for different data structures (arrays, lists of hashes, etc.)",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "perl": "6.d",
   "authors": [
     "Anton Antonov"
