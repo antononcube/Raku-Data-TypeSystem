@@ -5,6 +5,29 @@ use Data::TypeSystem::Examiner;
 unit module Data::TypeSystem;
 
 #===========================================================
+#| Determines if given data is reshapable.
+#| (For example, a Positional of Maps.)
+#| C<:$iterable-type> - Expected type of the given argument.
+#| C<:$record-type> - Expected type of the elements of the given argument.
+our proto is-reshapable($data, |) is export {*}
+
+multi is-reshapable($data, *%args) {
+    return Data::TypeSystem::Examiner.is-reshapable($data, |%args);
+}
+
+multi is-reshapable($iterable-type, $record-type, $data) {
+    Data::TypeSystem::Examiner.is-reshapable($data, :$iterable-type, :$record-type)
+}
+
+#===========================================================
+#| Returns the record types of the given argument.
+our proto record-types($data) is export {*}
+
+multi record-types($data) {
+    return Data::TypeSystem::Examiner.record-types($data);
+}
+
+#===========================================================
 #| Deduces the type of the given argument.
 #| C<:$max-enum-elems> -- Max number of enum elements.
 #| C<:$max-struct-elems> -- Max number of struct elements.
