@@ -1,5 +1,3 @@
-use v6.d;
-
 use Data::TypeSystem::Predicates;
 
 #===========================================================
@@ -13,14 +11,14 @@ role Data::TypeSystem::Type {
     method Str(-->Str) {
         self.gist;
     }
-};
+}
 
 class Data::TypeSystem::Atom
         does Data::TypeSystem::Type {
     method gist(-->Str) {
         'Atom(' ~ $.type.gist ~ ')'
     }
-};
+}
 
 class Data::TypeSystem::Pair
         does Data::TypeSystem::Type {
@@ -33,8 +31,7 @@ class Data::TypeSystem::Pair
     method gist(-->Str) {
         'Pair(' ~ $.keyType.gist ~ ', ' ~ $.type.gist ~ ')'
     }
-};
-
+}
 
 class Data::TypeSystem::Vector
         does Data::TypeSystem::Type {
@@ -45,7 +42,7 @@ class Data::TypeSystem::Vector
             'Vector([' ~ $.type>>.gist.join(', ') ~ '], ' ~ $.count.gist ~ ')'
         }
     }
-};
+}
 
 class Data::TypeSystem::Tuple
         does Data::TypeSystem::Type {
@@ -56,7 +53,7 @@ class Data::TypeSystem::Tuple
             'Tuple([' ~ $.type>>.gist.join(', ') ~ '], ' ~ $.count.gist ~ ')'
         }
     }
-};
+}
 
 class Data::TypeSystem::Assoc
         does Data::TypeSystem::Type {
@@ -74,7 +71,7 @@ class Data::TypeSystem::Assoc
             'Assoc(' ~ $.keyType.gist ~ ', ' ~ $.type.gist ~ ', ' ~ $.count.gist ~ ')'
         }
     }
-};
+}
 
 class Data::TypeSystem::Struct
         does Data::TypeSystem::Type {
@@ -89,7 +86,7 @@ class Data::TypeSystem::Struct
     method gist(-->Str) {
         'Struct([' ~ $!keys.join(', ') ~ '], [' ~ $!values.map({ $_.^name }).join(', ') ~ '])';
     }
-};
+}
 
 #===========================================================
 

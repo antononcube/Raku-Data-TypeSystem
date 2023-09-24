@@ -1,5 +1,3 @@
-use v6.d;
-
 use Data::TypeSystem::Examiner;
 
 unit module Data::TypeSystem;
