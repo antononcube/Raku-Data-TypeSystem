@@ -131,11 +131,11 @@ class Data::TypeSystem::Examiner {
 
         given $data {
             when is-array-of-pairs($_) {
-                $types = $data>>.are.map({ $_.map({ $_.key => $_.value }).Hash });
+                $types = $data>>.are.map({ $_.map({ $_.key => $_.value }).Hash }).List;
             }
 
             when self.is-reshapable(Positional, Map, $_) {
-                $types = $data>>.are.map({ $_.map({ $_.key => $_.value }).Hash });
+                $types = $data>>.are.map({ $_.map({ $_.key => $_.value }).Hash }).List;
             }
 
             when is-hash-of-hashes($_) {
@@ -143,7 +143,7 @@ class Data::TypeSystem::Examiner {
             }
 
             when $_ ~~ List {
-                $types = $_.map({ $_.are });
+                $types = $_.map({ $_.are }).List;
             }
 
             when $_ ~~ Map {
