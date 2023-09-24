@@ -76,4 +76,8 @@ my @dsTable11 = [{ :Date(Date.new(2020, 12, 23)), :Nick("Watson"), :Weekday(3/7)
 is deduce-type(@dsTable11),
         'Vector(Struct([Date, Nick, Weekday], [Date, Str, Rat]), 4)';
 
+# 7
+is record-types(@dsTable11)>>.values>>.sort({$_.raku})>>.List.raku,
+        '((Date, Rat, Str), (Date, Rat, Str), (Date, Rat, Str), (Date, Rat, Str))';
+
 done-testing;
