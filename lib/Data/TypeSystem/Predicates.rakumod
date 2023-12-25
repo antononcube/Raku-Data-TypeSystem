@@ -57,3 +57,8 @@ sub is-hash-of-hashes($obj) is export {
 sub is-array-of-pairs($obj) is export {
     $obj ~~ Positional and ( [and] $obj.map({ $_ ~~ Pair }) )
 }
+
+#------------------------------------------------------------
+sub is-matrix($obj, $type = Numeric:D) is export {
+    has-homogeneous-shape($obj) && ([&&] $obj.map({ $_.all ~~ $type }))
+}
