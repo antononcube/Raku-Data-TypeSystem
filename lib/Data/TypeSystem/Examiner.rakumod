@@ -117,7 +117,7 @@ class Data::TypeSystem::Examiner {
     proto method is-reshapable(|) {*}
 
     multi method is-reshapable($data, :$iterable-type = Positional, :$record-type = Hash) {
-        $data ~~ $iterable-type and ([and] $data.map({ $_ ~~ $record-type }))
+        $data ~~ $iterable-type and ([and] $data.map({ $_ ~~ $record-type }).cache )
     }
 
     multi method is-reshapable($iterable-type, $record-type, $data) {
@@ -181,7 +181,7 @@ class Data::TypeSystem::Examiner {
                 if $tbag.elems == 1 && !$tally {
                     return Data::TypeSystem::Vector.new(@t[0], $_.elems)
                 } elsif $tally {
-                    return Data::TypeSystem::Tuple.new($tbag.pairs.sort({ $_.key }), $_.elems)
+                    return Data::TypeSystem::Tuple.new($tbag.pairs.sort({ $_.key }).cache, $_.elems)
                 }
                 if $_.elems ≤ self.max-tuple-elems {
                     return Data::TypeSystem::Tuple.new(@t, 1)
@@ -201,15 +201,15 @@ class Data::TypeSystem::Examiner {
             }
 
             when $_ ~~ Hash {
-                my @res = |$_>>.are.sort({ $_.key });
+                my @res = |$_>>.are.sort({ $_.key }).cache;
                 if !self.has-homogeneous-type($_.values) && $_.elems ≤ self.max-struct-elems  {
                     return Data::TypeSystem::Struct.new(keys => @res>>.key.List, values => @res>>.value.List);
                 } elsif self.has-homogeneous-type($_.values) {
                     return Data::TypeSystem::Assoc.new(keyType => self.deduce-type($_.keys[0]), type => self.deduce-type($_.values[0]), count => $_.elems);
                 } elsif $tally {
-                    my @t = $_.pairs.map({ self.deduce-type($_) });
+                    my @t = $_.pairs.map({ self.deduce-type($_) }).Array;
                     my $tbag = @t>>.gist.BagHash;
-                    return Data::TypeSystem::Assoc.new(keyType => 'Tally', type => $tbag.pairs.sort(*.key), count => $_.elems );
+                    return Data::TypeSystem::Assoc.new(keyType => 'Tally', type => $tbag.pairs.sort(*.key).cache, count => $_.elems );
                 } else {
                     return Data::TypeSystem::Assoc.new(keyType => self.deduce-type($_.keys.List):tally, type => self.deduce-type($_.values.List):tally, count => $_.elems);
                 }
