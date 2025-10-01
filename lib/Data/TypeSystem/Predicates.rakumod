@@ -34,7 +34,7 @@ sub is-array-of-key-array-pairs(@arr) is export {
     ( [and] @arr.map({ is-key-array-pair($_) }) ) and has-homogeneous-shape(@arr)
 }
 
-sub is-key-array-pair( $p ) { $p ~~ Pair and $p.key ~~ Str and $p.value ~~ Positional }
+sub is-key-array-pair( $p ) { $p ~~ Pair:D && $p.key ~~ (Str:D | Numeric:D) && $p.value ~~ (Array:D | List:D | Seq:D) }
 
 #------------------------------------------------------------
 sub is-array-of-key-hash-pairs(@arr) is export {
@@ -45,17 +45,22 @@ sub is-key-hash-pair( $p ) { $p ~~ Pair and $p.key ~~ Str and $p.value ~~ Map }
 
 #------------------------------------------------------------
 sub is-array-of-hashes($arr) is export {
-    $arr ~~ Positional and ( [and] $arr.map({ $_ ~~ Map }) )
+    $arr ~~ (Array:D | List:D | Seq:D) && $arr.all ~~ Map:D
+}
+
+#------------------------------------------------------------
+sub is-array-of-arrays($arr) is export {
+    $arr ~~ (Array:D | List:D | Seq:D) && $arr.all ~~ (Array:D | List:D | Seq:D)
 }
 
 #------------------------------------------------------------
 sub is-hash-of-hashes($obj) is export {
-    $obj ~~ Map and ( [and] $obj.values.map({ $_ ~~ Map }) )
+    $obj ~~ Map:D && $obj.values.all ~~ Map:D
 }
 
 #------------------------------------------------------------
 sub is-array-of-pairs($obj) is export {
-    $obj ~~ Positional and ( [and] $obj.map({ $_ ~~ Pair }) )
+    $obj ~~ (Array:D | List:D | Seq:D) && $obj.all ~~ Pair:D
 }
 
 #------------------------------------------------------------
