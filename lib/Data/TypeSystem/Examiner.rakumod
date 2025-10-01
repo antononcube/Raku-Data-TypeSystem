@@ -63,6 +63,9 @@ class Data::TypeSystem::Assoc
     multi method new($keyType, $type, $count) {
         self.bless(:$keyType, :$type, :$count)
     }
+    multi method new(:$keyType, :$type, :$count) {
+        self.bless(:$keyType, :$type, :$count)
+    }
 
     method gist(-->Str) {
         if $!keyType eq 'Tally' {
@@ -80,6 +83,9 @@ class Data::TypeSystem::Struct
 
     submethod BUILD(:$!keys = Any, :$!values = Any) {}
     multi method new($keys, $values) {
+        self.bless(:$keys, :$values)
+    }
+    multi method new(:$keys, :$values) {
         self.bless(:$keys, :$values)
     }
 
@@ -190,6 +196,10 @@ class Data::TypeSystem::Examiner {
                 }
             }
 
+            when $_ ~~ Stash {
+                return Data::TypeSystem::Assoc.new(keyType => Any, type => Any, count => $_.elems );
+            }
+
             when is-hash-of-hashes($_) {
                 my $kType = self.deduce-type($_.keys[0], :$tally);
                 my $vType = self.deduce-type($_.values.List, :$tally);
@@ -200,7 +210,7 @@ class Data::TypeSystem::Examiner {
                 return Data::TypeSystem::Assoc.new( keyType => $kType, type => $vType, count => $_.elems)
             }
 
-            when $_ ~~ Hash {
+            when $_ ~~ Map {
                 my @res = |$_>>.are.sort({ $_.key }).cache;
                 if !self.has-homogeneous-type($_.values) && $_.elems ≤ self.max-struct-elems  {
                     return Data::TypeSystem::Struct.new(keys => @res>>.key.List, values => @res>>.value.List);
