@@ -1,11 +1,11 @@
 #!/usr/bin/env perl6
 
-use lib './lib';
-use lib '.';
-
 use Data::TypeSystem;
 use Data::TypeSystem::Predicates;
 use Data::Reshapers;
+
+#========================================================================================================================
+say "=" x 120;
 
 my @tbl0 = get-titanic-dataset(headers => 'auto');
 my @tbl1 = get-titanic-dataset(headers => 'skip');
@@ -35,6 +35,7 @@ say '@tbl1.&has-homogeneous-shape       : ', @tbl1.&has-homogeneous-shape;
 say '@tbl1.&has-homogeneous-keys        : ', @tbl1.&has-homogeneous-keys;
 say '@tbl1.&has-homogeneous-array-types : ', @tbl1[^12].&has-homogeneous-array-types;
 
+#========================================================================================================================
 say "=" x 120;
 
 my %dc1 =
@@ -48,6 +49,7 @@ say "deduce-type(%dc1)        : ", deduce-type(%dc1);
 say "deduce-type(%dc1.keys)   : ", deduce-type(%dc1.keys);
 say "deduce-type(%dc1.values) : ", deduce-type(%dc1.values);
 
+#========================================================================================================================
 say "=" x 120;
 
 my @ls3 = [3, 340, "some", "choice", "words"];
@@ -55,3 +57,17 @@ my @ls3 = [3, 340, "some", "choice", "words"];
 say "@ls3 : ", @ls3;
 say "deduce-type(@ls3)        : ", deduce-type(@ls3);
 say "deduce-type(@ls3):tally  : ", deduce-type(@ls3):tally;
+
+#`[
+my %st := Stash.new;
+say %st.^name;
+say %st ~~ Map;
+
+say deduce-type(%st);
+
+my %mp := Hash.new(1,1,2,2);
+say %mp;
+say %mp.^name;
+
+say deduce-type(%mp);
+]
