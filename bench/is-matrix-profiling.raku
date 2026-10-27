@@ -3,8 +3,9 @@ use v6.d;
 
 use Data::TypeSystem::Predicates;
 
-my $nrow = 10;
-my $ncol = 1_000;
+# Typical matrix shape from Quantile Regression
+my $nrow = 1_000;
+my $ncol = 10 + 2 * 1_000;
 my @mat = (2.rand xx ($ncol * $nrow)).rotor($ncol);
 
 my $start = now;
