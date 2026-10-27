@@ -64,6 +64,27 @@ sub is-array-of-pairs($obj) is export {
 }
 
 #------------------------------------------------------------
-sub is-matrix($obj, $type = Numeric:D) is export {
-    has-homogeneous-shape($obj) && ([&&] $obj.map({ $_.all ~~ $type }))
+sub is-matrix($obj, $type = Numeric:D --> Bool) is export {
+    return False unless $obj ~~ Positional:D;
+
+    if $obj ~~ Array:D && $obj.shape.elems == 2 {
+        for $obj.flat -> $value {
+            return False unless $value ~~ $type;
+        }
+        return True;
+    }
+
+    my $columns;
+    for $obj.list -> $row {
+        return False unless $row ~~ Positional:D;
+
+        my $width = $row.elems;
+        $columns //= $width;
+        return False unless $width == $columns;
+
+        for $row.list -> $value {
+            return False unless $value ~~ $type;
+        }
+    }
+    True
 }
