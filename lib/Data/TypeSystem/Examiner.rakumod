@@ -168,11 +168,13 @@ class Data::TypeSystem::Examiner {
     multi method deduce-type($data, Bool :$tally = False) {
         given $data {
             when $_ ~~ Int { return Data::TypeSystem::Atom.new(Int, 1) }
+            when $_ ~~ FatRat { return Data::TypeSystem::Atom.new(FatRat, 1) }
             when $_ ~~ Rat { return Data::TypeSystem::Atom.new(Rat, 1) }
             when $_ ~~ Numeric { return Data::TypeSystem::Atom.new(Numeric, 1) }
             when $_ ~~ Str { return Data::TypeSystem::Atom.new(Str, 1) }
             when $_ ~~ DateTime { return Data::TypeSystem::Atom.new(DateTime, 1) }
             when $_ ~~ Dateish {return Data::TypeSystem::Atom.new(Dateish, 1) }
+            when $_ ~~ Callable {return Data::TypeSystem::Atom.new(Callable, 1) }
             when $_ ~~ Pair { return Data::TypeSystem::Pair.new(self.deduce-type($_.key), self.deduce-type($_.value)) }
 
             when $_ ~~ Seq { return self.deduce-type($data.List); }

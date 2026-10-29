@@ -1,0 +1,38 @@
+# use lib <. lib>;
+
+use Data::TypeSystem;
+use Data::TypeSystem::Predicates;
+
+use Test;
+
+my @a = {1}, {$^x}, {$^x ** 2}, {$^x ** 3};
+my @b = [1, {1}], [3, 4];
+
+plan *;
+
+## 1
+ok deduce-type(@a), 'ok to call with callables';
+
+## 2
+# Vector(Atom((Callable)), 4)
+is
+        deduce-type(@a),
+        Data::TypeSystem::Vector.new(type => Data::TypeSystem::Atom.new(type => Callable, count => 1), count => 4),
+        'expected type';
+
+## 3
+# Tuple([Tuple([Atom((Int)), Atom((Callable))]), Vector(Atom((Int)), 2)])
+is
+        deduce-type(@b),
+        Data::TypeSystem::Tuple.new(
+                type => $[Data::TypeSystem::Tuple.new(
+                        type => $[Data::TypeSystem::Atom.new(type => Int, count => 1),
+                                  Data::TypeSystem::Atom.new(type => Callable, count => 1)], count => 1),
+                          Data::TypeSystem::Vector.new(type => Data::TypeSystem::Atom.new(type => Int, count => 1), count => 2)],
+                count => 1),
+        'expected type';
+
+## 4
+is is-matrix([@a,], Callable:D), True, 'matrix of callables';
+
+done-testing;
